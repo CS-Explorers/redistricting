@@ -4,8 +4,8 @@ import static org.hamcrest.core.Is.is;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.*;
+
 /**
  * Tests for class Region.
  *
@@ -81,7 +81,7 @@ public class RegionTest {
         int maxRegionSide = (int) Math.sqrt(MAX_REGION_SIZE);
         for (int i = 0; i < maxRegionSide; i++) {
             assertThat("Square region test failed at size " + i * i,
-                       i * i, is((new Region(i * i)).size()));
+                    i * i, is((new Region(i * i)).size()));
         }
     }
 
@@ -90,8 +90,39 @@ public class RegionTest {
         int maxRegionSide = (int) Math.sqrt(MAX_REGION_SIZE);
         for (int i = 0; i < maxRegionSide; i++) {
             assertThat("Square region number of voters failed at size " + i * i,
-                       (new Region(i * i)).numberOfVoters(), is(i * i));
+                    (new Region(i * i)).numberOfVoters(), is(i * i));
         }
+    }
+
+    /*
+    In this test we test the constructor for Region.java that uses one parameter of a collection of voters. Where
+    we tested the size of the region, the number of voters and the location of voters.
+     */
+    @Test(timeout = MAX_TIMEOUT)
+    public void voterCollectionTest() {
+        Collection<Voter> regionVoter = new HashSet<Voter>();
+        Set<Location> regionLocation = new TreeSet<Location>();
+        Location location1 = new Location(0, 0);
+        Location location2 = new Location(0, 1);
+        Location location3 = new Location(1, 0);
+        Location location4 = new Location(1, 1);
+        Voter voter1 = new Voter(Party.NONE, location1);
+        Voter voter2 = new Voter(Party.PARTY0, location2);
+        Voter voter3 = new Voter(Party.PARTY1, location3);
+        Voter voter4 = new Voter(Party.NONE, location4);
+        regionVoter.add(voter1);
+        regionVoter.add(voter2);
+        regionVoter.add(voter3);
+        regionVoter.add(voter4);
+        regionLocation.add(location1);
+        regionLocation.add(location2);
+        regionLocation.add(location3);
+        regionLocation.add(location4);
+        Region region = new Region(regionVoter);
+        assertThat(4,is(region.size()));
+        assertThat(4, is(region.numberOfVoters()));
+        assertThat(regionLocation, is(region.locations()));
+        assertThat(regionVoter,is(region.voters()));
     }
 
     @Test(timeout = MAX_TIMEOUT)
